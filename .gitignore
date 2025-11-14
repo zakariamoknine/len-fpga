@@ -1,0 +1,15 @@
+out/
+
+*.runs/
+*.cache/
+*.sim/
+*.hw/
+*.ip_user_files/
+*.Xil/
+*.jou
+*.log
+*.str
+*.pb
+*.dcp
+*.rpt
+*.xpr
