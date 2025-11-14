@@ -31,6 +31,9 @@ $(OUTDIR)/%.o: %.S
 
 -include $(OBJ:.o=.d)
 
+ur:
+	./update_bram.sh
+
 clean:
 	rm -rf $(OUTDIR)
 

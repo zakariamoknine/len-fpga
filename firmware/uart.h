@@ -7,7 +7,6 @@
 void uart_init(uint32_t baudrate, uint32_t clk_hz);
 
 void uart_putc(char c);
-
 char uart_getc(void);
 
 void printk(const char* str, ...);

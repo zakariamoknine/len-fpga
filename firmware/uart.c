@@ -53,10 +53,15 @@ char uart_getc(void) {
 	return uart_read_reg(UART_RBR);
 }
 
+static void pchar(char c)
+{
+	uart_putc(c);
+}
+
 static void pstring(const char* str)
 {
 	while(*str) {
-		uart_putc(*str++);
+		pchar(*str++);
 	}
 }
 
@@ -68,12 +73,12 @@ static void pnumber(uint64_t num, uint8_t base, uint8_t sign)
 	int32_t i = 0;
 
 	if (sign && (int64_t)num < 0) {
-		uart_putc('-');
+		pchar('-');
 		num = -(int64_t)num;
 	}
 
 	if (num == 0) {
-		uart_putc('0');
+		pchar('0');
 		return;
 	}
 
@@ -83,15 +88,20 @@ static void pnumber(uint64_t num, uint8_t base, uint8_t sign)
 	}
 
 	while (--i >= 0) {
-		uart_putc(buf[i]);
+		pchar(buf[i]);
 	}
 }
 
 static void vprintk(const char* str, va_list ap)
 {
 	for (const char* c = str; *c; c++) {
+		if (*c == '\n') {
+			pchar('\r');
+			pchar('\n');
+			continue;
+		}
 		if (*c != '%') {
-			uart_putc(*c);
+			pchar(*c);
 			continue;
 		}
 
@@ -100,7 +110,7 @@ static void vprintk(const char* str, va_list ap)
 		switch (*c) {
 		case 'c': {
 			char ch = (char)va_arg(ap, int);
-			uart_putc(ch);
+			pchar(ch);
 			break;
 		}
 		case 's': {
@@ -130,11 +140,11 @@ static void vprintk(const char* str, va_list ap)
 			break;
 		}
 		case '%':
-			uart_putc('%');
+			pchar('%');
 			break;
 		default:
-			uart_putc('%');
-			uart_putc(*c);
+			pchar('%');
+			pchar(*c);
 			break;
 		}
 	}
