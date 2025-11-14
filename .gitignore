@@ -3,7 +3,9 @@ out/
 *.runs/
 *.cache/
 *.sim/
+*.gen/
 *.hw/
+*.srcs/
 *.ip_user_files/
 *.Xil/
 *.jou
@@ -13,3 +15,5 @@ out/
 *.dcp
 *.rpt
 *.xpr
+
+*.mmi

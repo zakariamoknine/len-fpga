@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module vexiiriscv_bd (
+module vexiiriscv_wrapper (
 	input  wire          clk,
 	input  wire          reset,
 
