@@ -1,9 +1,9 @@
 `timescale 1ns / 1ps
 
-module vexiiriscv_wrapper (
+module vexiiriscv_cpu (
 	input  wire          clk,
 	input  wire          reset,
-
+	
 	output wire          AXI_DC_awvalid,
 	input  wire          AXI_DC_awready,
 	output wire [31:0]   AXI_DC_awaddr,
@@ -87,7 +87,7 @@ module vexiiriscv_wrapper (
 	//input  wire          inturrupt_m_timer,
 	//input  wire          inturrupt_m_software,
 	//input  wire          inturrupt_m_external,
-	//input  wire          inturrupt_s_external,
+	//input  wire          inturrupt_s_external
 );
 
 	localparam integer CLK_FREQ_HZ = 100_000_000;
