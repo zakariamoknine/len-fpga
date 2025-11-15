@@ -4,7 +4,7 @@ import serial
 
 SERIAL_PORT = "/dev/ttyUSB1"
 BAUDRATE = 115200
-FIRMWARE = "out/opensbi.bin"
+FIRMWARE = "build/opensbi.bin"
 
 print(f"Opening {SERIAL_PORT}...")
 ser = serial.Serial(SERIAL_PORT, BAUDRATE, timeout=1)
