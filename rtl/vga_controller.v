@@ -22,7 +22,7 @@ module vga_controller (
 	wire        bram_clkb;
 	wire [31:0] bram_dinb;
 	wire [31:0] bram_doutb;
-	reg         bram_enb;
+	wire        bram_enb;
 	wire        bram_rstb;
 	wire [ 3:0] bram_web;
 	

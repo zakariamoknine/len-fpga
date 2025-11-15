@@ -1,10 +1,10 @@
 #include "uart.h"
 
-#define DDR_BASE   0x80000000ULL
+#define DDR_BASE   0x80000000UL
 #define DDR_SIZE   (128UL * 1024 * 1024)
 #define DDR_WORDS  (DDR_SIZE / 4)
 
-#define FB_BASE    0x20000000ULL
+#define FB_BASE    0x20000000UL
 
 void start(void)
 {
