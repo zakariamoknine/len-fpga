@@ -30,7 +30,7 @@
 #define PLATFORM_ACLINT_MTIMER_ADDR	(PLATFORM_CLINT_ADDR + \
 					 CLINT_MTIMER_OFFSET)
 #define PLATFORM_UART_ADDR		0x44A00000
-#define PLATFORM_UART_INPUT_FREQ	10000000
+#define PLATFORM_UART_INPUT_FREQ	100000000
 #define PLATFORM_UART_BAUDRATE		115200
 
 //static struct plic_data plic = {
@@ -86,30 +86,30 @@ static int platform_final_init(bool cold_boot)
 {
 	return 0;
 }
-
-/*
- * Initialize the platform interrupt controller during cold boot.
- */
-static int platform_irqchip_init(void)
-{
-	return 0;
-}
-
-/*
- * Initialize IPI during cold boot.
- */
-static int platform_ipi_init(void)
-{
-	return 0;
-}
-
-/*
- * Initialize platform timer during cold boot.
- */
-static int platform_timer_init(void)
-{
-	return 0;
-}
+//
+///*
+// * Initialize the platform interrupt controller during cold boot.
+// */
+//static int platform_irqchip_init(void)
+//{
+//	return 0;
+//}
+//
+///*
+// * Initialize IPI during cold boot.
+// */
+//static int platform_ipi_init(void)
+//{
+//	return 0;
+//}
+//
+///*
+// * Initialize platform timer during cold boot.
+// */
+//static int platform_timer_init(void)
+//{
+//	return 0;
+//}
 
 /*
  * Platform descriptor.
@@ -117,9 +117,9 @@ static int platform_timer_init(void)
 const struct sbi_platform_operations platform_ops = {
 	.early_init		= platform_early_init,
 	.final_init		= platform_final_init,
-	.irqchip_init		= platform_irqchip_init,
-	.ipi_init		= platform_ipi_init,
-	.timer_init		= platform_timer_init
+	.irqchip_init		= NULL,
+	.ipi_init		= NULL,
+	.timer_init		= NULL
 };
 const struct sbi_platform platform = {
 	.opensbi_version	= OPENSBI_VERSION,
