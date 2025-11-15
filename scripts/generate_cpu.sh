@@ -15,9 +15,9 @@ sbt "Test/runMain vexiiriscv.Generate
 	--fetch-l1 --fetch-axi4 --fetch-l1-ways=4 --fetch-l1-mem-data-width-min=64 \
 	--with-btb --with-ras --with-gshare \
 	--region base=00000000,size=1000000,main=1,exe=1 \
-	--region base=80000000,size=8000000,main=1,exe=1 \
 	--region base=40000000,size=1000000,main=0,exe=0 \
-	--region base=44A00000,size=1000000,main=0,exe=0"
+	--region base=44A00000,size=1000000,main=0,exe=0 \
+	--region base=80000000,size=8000000,main=1,exe=1"
 
 #
 # CONFIG: 32-BIT LINUX

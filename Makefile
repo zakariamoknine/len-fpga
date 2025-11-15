@@ -1,14 +1,19 @@
 include Makefile.conf
 
-OUTDIR := out
-ELF := $(OUTDIR)/firmware.elf
+SRCDIR   := firmware
+OUTDIR   := out
+
+SRC := \
+	$(SRCDIR)/entry.S\
+	$(SRCDIR)/main.c \
+	$(SRCDIR)/uart.c
+
+OBJ := $(patsubst $(SRCDIR)/%,$(OUTDIR)/%,$(SRC:.c=.o))
+OBJ := $(patsubst $(SRCDIR)/%,$(OUTDIR)/%,$(OBJ:.S=.o))
+
+ELF      := $(OUTDIR)/firmware.elf
 FIRMWARE := $(OUTDIR)/firmware.img
-MEMFILE := $(OUTDIR)/firmware.mem
-
-SRCDIR := firmware
-
-SRC := $(shell find $(SRCDIRS) -type f \( -name "*.c" -o -name "*.S" \))
-OBJ := $(patsubst %.c, $(OUTDIR)/%.o, $(filter %.c,$(SRC))) $(patsubst %.S, $(OUTDIR)/%.o, $(filter %.S,$(SRC)))
+MEMFILE  := $(OUTDIR)/firmware.mem
 
 all: $(FIRMWARE)
 
@@ -18,15 +23,17 @@ $(FIRMWARE): $(ELF)
 	xxd -ps -c4 -g4 $@ >> $(MEMFILE)
 
 $(ELF): $(OBJ)
-	$(LD) -T firmware/linker.ld -o $@ $^
+	$(LD) -T $(SRCDIR)/linker.ld -o $@ $^
 
-$(OUTDIR)/%.o: %.c
-	@mkdir -p $(dir $@)
-	$(CC) $(CCFLAGS) -o $@ $<
+# Compile C
+$(OUTDIR)/%.o: $(SRCDIR)/%.c
+	@mkdir -p $(OUTDIR)
+	$(CC) $(CCFLAGS) -MMD -MP -c $< -o $@
 
-$(OUTDIR)/%.o: %.S
-	@mkdir -p $(dir $@)
-	$(CC) $(CCFLAGS) -o $@ $<
+# Compile Assembly
+$(OUTDIR)/%.o: $(SRCDIR)/%.S
+	@mkdir -p $(OUTDIR)
+	$(CC) $(CCFLAGS) -MMD -MP -c $< -o $@
 
 -include $(OBJ:.o=.d)
 
@@ -40,4 +47,4 @@ gencpu:
 clean:
 	rm -rf $(OUTDIR)
 
-.PHONY: all bram clean
+.PHONY: all bram gencpu clean
