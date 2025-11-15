@@ -1,59 +1,38 @@
 include Makefile.conf
 
-SRCDIR := firmware
-OUTDIR := out
+SBI := $(BUILD_DIR)/opensbi.bin
+KERNEL := $(BUILD_DIR)/kernel.bin
 
-SRC := \
-	$(SRCDIR)/entry.S \
-	$(SRCDIR)/main.c  \
-	$(SRCDIR)/uart.c
+all: sbi
 
-OBJ := $(patsubst $(SRCDIR)/%,$(OUTDIR)/%,$(SRC:.c=.o))
-OBJ := $(patsubst $(SRCDIR)/%,$(OUTDIR)/%,$(OBJ:.S=.o))
+sbi: kernel
+	make -C external/opensbi \
+		PLATFORM=len-fpga \
+		CROSS_COMPILE=$(SBI_CROSS_COMPILE) \
+		FW_PAYLOAD_PATH=$(BUILD_DIR)/kernel.bin
+	cp external/opensbi/build/platform/len-fpga/firmware/fw_payload.bin $(SBI)
 
-ELF      := $(OUTDIR)/firmware.elf
-FIRMWARE := $(OUTDIR)/firmware.bin
-FIRMWARE_MEMFILE := $(OUTDIR)/firmware.mem
+kernel: firmware
+	make -C external/len
+	cp external/len/build/kernel.bin $(KERNEL)
 
-SBI := $(OUTDIR)/opensbi.bin
-SBI_MEMFILE := $(OUTDIR)/opensbi.mem
+firmware: 
+	mkdir -p build
+	make -C firmware
 
-all: $(FIRMWARE) sbi
-
-$(FIRMWARE): $(ELF)
-	$(OBJCOPY) -O binary $< $@
-	echo "@00000000" > $(FIRMWARE_MEMFILE)
-	xxd -ps -c4 -g4 $@ >> $(FIRMWARE_MEMFILE)
-
-$(ELF): $(OBJ)
-	$(LD) -T $(SRCDIR)/linker.ld -o $@ $^
-
-$(OUTDIR)/%.o: $(SRCDIR)/%.c
-	@mkdir -p $(OUTDIR)
-	$(CC) $(CCFLAGS) -MMD -MP -c $< -o $@
-
-$(OUTDIR)/%.o: $(SRCDIR)/%.S
-	@mkdir -p $(OUTDIR)
-	$(CC) $(CCFLAGS) -MMD -MP -c $< -o $@
-
--include $(OBJ:.o=.d)
-
-sbi:
-	make -C external/opensbi PLATFORM=len-fpga CROSS_COMPILE=$(SBICC)
-	mv external/opensbi/build/platform/len-fpga/firmware/fw_jump.bin $(SBI)
-	echo "@00000000" > $(SBI_MEMFILE)
-	xxd -ps -c4 -g4 $(SBI) >> $(SBI_MEMFILE)
-	dd if=/dev/zero bs=1 count=$$((143360 - $$(stat -c%s $(SBI_MEMFILE)))) >> $(SBI_MEMFILE)
+serial:
+	./scripts/serial_load.py
 
 bram:
 	./scripts/update_bram.sh
 
-gencpu:
+cpu:
 	./scripts/generate_cpu.sh
 	mv external/VexiiRiscv/VexiiRiscv.v ip/VexiiRiscv.v
 
 clean:
-	rm -rf $(OUTDIR)
+	rm -rf $(BUILD_DIR)
 	make -C external/opensbi clean
+	make -C external/len clean
 
-.PHONY: all sbi bram gencpu clean
+.PHONY: all sbi kernel firmware serial bram cpu clean
