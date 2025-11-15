@@ -1,3 +1,6 @@
 [submodule "external/VexiiRiscv"]
 	path = external/VexiiRiscv
 	url = https://github.com/SpinalHDL/VexiiRiscv
+[submodule "external/len"]
+	path = external/len
+	url = https://github.com/zakariamoknine/len
