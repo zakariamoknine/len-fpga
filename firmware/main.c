@@ -5,7 +5,8 @@
 #define DDR_WORDS  (DDR_SIZE / 4)
 
 #define LOAD_ADDR  0x80000000UL
-#define LOAD_SIZE  (32 * 1024)
+//#define LOAD_SIZE  2146312
+#define LOAD_SIZE  5456
 
 void show_progress(size_t recvd)
 {
@@ -17,7 +18,7 @@ void show_progress(size_t recvd)
 void serial_load(void)
 {
 	printk("Serial load starting...\n");
-	printk("Loading 'firmware.mem' into addr=%p\n", LOAD_ADDR);
+	printk("Loading 'opensbi.mem' into addr=%p\n", LOAD_ADDR);
 
 	volatile uint8_t *dest = (volatile uint8_t *)(LOAD_ADDR);	
 	size_t recvd = 0;
@@ -25,7 +26,7 @@ void serial_load(void)
 	printk("Reading bytes...\n");
 
 	while (recvd < LOAD_SIZE) {
-		uint32_t byte_data = uart_getc();
+		uint8_t byte_data = uart_getc();
 		*dest++ = byte_data;
 		recvd++;
 
@@ -68,6 +69,25 @@ void ddr2_test(void)
 
 	printk("DDR2 test: ");
 	printk("\033[1;32mPass\033[0m\n");
+}
+
+static inline uint64_t read_time(void)
+{
+	uint64_t t;
+	asm volatile ("rdtime %0" : "=r" (t));
+	return t;
+}
+
+void rdtime_test(void)
+{
+	printk("rdtime test starting...\n");
+
+	while (1) {
+		uint64_t t = read_time();
+		printk("rdtime = %x\n", (uint64_t)t);
+
+		for (volatile int i = 0; i < 1000000; i++);
+	}
 }
 
 void start(void)
