@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module vexiiriscv_cpu (
+module riscv_cpu (
 	input  wire          clk,
 	input  wire          reset,
 	

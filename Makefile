@@ -31,10 +31,13 @@ $(OUTDIR)/%.o: %.S
 
 -include $(OBJ:.o=.d)
 
-ur:
-	./update_bram.sh
+bram:
+	./scripts/update_bram.sh
+
+gencpu:
+	./scripts/generate_cpu.sh
 
 clean:
 	rm -rf $(OUTDIR)
 
-.PHONY: all ur clean
+.PHONY: all bram clean
