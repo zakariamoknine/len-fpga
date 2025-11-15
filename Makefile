@@ -1,7 +1,7 @@
 include Makefile.conf
 
-SRCDIR   := firmware
-OUTDIR   := out
+SRCDIR := firmware
+OUTDIR := out
 
 SRC := \
 	$(SRCDIR)/entry.S \
@@ -12,15 +12,18 @@ OBJ := $(patsubst $(SRCDIR)/%,$(OUTDIR)/%,$(SRC:.c=.o))
 OBJ := $(patsubst $(SRCDIR)/%,$(OUTDIR)/%,$(OBJ:.S=.o))
 
 ELF      := $(OUTDIR)/firmware.elf
-FIRMWARE := $(OUTDIR)/firmware.img
-MEMFILE  := $(OUTDIR)/firmware.mem
+FIRMWARE := $(OUTDIR)/firmware.bin
+FIRMWARE_MEMFILE := $(OUTDIR)/firmware.mem
 
-all: $(FIRMWARE)
+SBI := $(OUTDIR)/opensbi.bin
+SBI_MEMFILE := $(OUTDIR)/opensbi.mem
+
+all: $(FIRMWARE) sbi
 
 $(FIRMWARE): $(ELF)
 	$(OBJCOPY) -O binary $< $@
-	echo "@0000" > $(MEMFILE)
-	xxd -ps -c4 -g4 $@ >> $(MEMFILE)
+	echo "@00000000" > $(FIRMWARE_MEMFILE)
+	xxd -ps -c4 -g4 $@ >> $(FIRMWARE_MEMFILE)
 
 $(ELF): $(OBJ)
 	$(LD) -T $(SRCDIR)/linker.ld -o $@ $^
@@ -35,6 +38,13 @@ $(OUTDIR)/%.o: $(SRCDIR)/%.S
 
 -include $(OBJ:.o=.d)
 
+sbi:
+	make -C external/opensbi PLATFORM=len-fpga CROSS_COMPILE=$(SBICC)
+	mv external/opensbi/build/platform/len-fpga/firmware/fw_jump.bin $(SBI)
+	echo "@00000000" > $(SBI_MEMFILE)
+	xxd -ps -c4 -g4 $(SBI) >> $(SBI_MEMFILE)
+	dd if=/dev/zero bs=1 count=$$((143360 - $$(stat -c%s $(SBI_MEMFILE)))) >> $(SBI_MEMFILE)
+
 bram:
 	./scripts/update_bram.sh
 
@@ -44,5 +54,6 @@ gencpu:
 
 clean:
 	rm -rf $(OUTDIR)
+	make -C external/opensbi clean
 
-.PHONY: all bram gencpu clean
+.PHONY: all sbi bram gencpu clean

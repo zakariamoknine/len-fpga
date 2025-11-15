@@ -90,25 +90,16 @@ module riscv_cpu (
 	//input  wire          inturrupt_s_external
 );
 
-	localparam integer CLK_FREQ_HZ = 100_000_000;
-	localparam integer TICKS_PER_SEC = CLK_FREQ_HZ - 1;
-	
 	reg [63:0] ticks;
-	reg [26:0] div_counter;
-	
-	always @(posedge clk or posedge reset) begin
-		if (reset) begin
-			div_counter <= 0;
-			ticks <= 0;
-		end else begin
-			if (div_counter == TICKS_PER_SEC) begin
-				div_counter <= 0;
-				ticks  <= ticks + 1;
-			end else begin
-				div_counter <= div_counter + 1;
-			end
-		end
-	end
+
+    always @(posedge clk) begin
+	   if (reset) begin
+	       ticks <= 0;
+	   end else begin
+	       ticks <= ticks + 1;
+	   end
+    end
+
 
 	VexiiRiscv cpu_instance (
 		.clk(clk),
