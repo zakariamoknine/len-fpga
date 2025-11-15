@@ -4,8 +4,8 @@ SRCDIR   := firmware
 OUTDIR   := out
 
 SRC := \
-	$(SRCDIR)/entry.S\
-	$(SRCDIR)/main.c \
+	$(SRCDIR)/entry.S \
+	$(SRCDIR)/main.c  \
 	$(SRCDIR)/uart.c
 
 OBJ := $(patsubst $(SRCDIR)/%,$(OUTDIR)/%,$(SRC:.c=.o))
@@ -25,12 +25,10 @@ $(FIRMWARE): $(ELF)
 $(ELF): $(OBJ)
 	$(LD) -T $(SRCDIR)/linker.ld -o $@ $^
 
-# Compile C
 $(OUTDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(OUTDIR)
 	$(CC) $(CCFLAGS) -MMD -MP -c $< -o $@
 
-# Compile Assembly
 $(OUTDIR)/%.o: $(SRCDIR)/%.S
 	@mkdir -p $(OUTDIR)
 	$(CC) $(CCFLAGS) -MMD -MP -c $< -o $@
