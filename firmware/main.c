@@ -4,19 +4,8 @@
 #define DDR_SIZE   (128UL * 1024 * 1024)
 #define DDR_WORDS  (DDR_SIZE / 4)
 
-#define FB_BASE    0x20000000UL
-
-void start(void)
+void ddr2_test(void) 
 {
-	uart_init(115200, 100000000);
-
-	volatile uint8_t* fb = (volatile uint8_t*)(FB_BASE);
-
-	printk("Coloring the screen..\n");
-	for (int i = 0; i < 640 * 480; i++) {
-		fb[i] = 0xFF;
-	}
-
 	printk("Start DDR2 test\n");
 	printk("Writing to DDR2...\n");
 
@@ -41,16 +30,13 @@ void start(void)
 
 	printk("DDR2 test: ");
 	printk("\033[1;32mPass\033[0m\n");
+}
 
-	printk("Coloring half of the screen..\n");
-	for (int i = 0; i < 640 * 480; i++) {
-		if (i < (640 * 480) / 2) {
-			fb[i] = 0xFF;
-		}
-		else {
-			fb[i] = 0x00;
-		}
-	}
+void start(void)
+{
+	uart_init(115200, 100000000);
+
+	ddr2_test();
 
 	while (1);
 }

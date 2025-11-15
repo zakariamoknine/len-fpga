@@ -19,7 +19,7 @@ $(FIRMWARE): $(ELF)
 	xxd -ps -c4 -g4 $@ >> $(MEMFILE)
 
 $(ELF): $(OBJ)
-	$(LD) -T linker.ld -o $@ $^
+	$(LD) -T firmware/linker.ld -o $@ $^
 
 $(OUTDIR)/%.o: %.c
 	@mkdir -p $(dir $@)
@@ -37,4 +37,4 @@ ur:
 clean:
 	rm -rf $(OUTDIR)
 
-.PHONY: all qemu qemugdb tags cscope clean
+.PHONY: all ur clean
