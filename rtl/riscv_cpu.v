@@ -92,13 +92,13 @@ module riscv_cpu (
 
 	reg [63:0] ticks;
 
-    always @(posedge clk) begin
-	   if (reset) begin
-	       ticks <= 0;
-	   end else begin
-	       ticks <= ticks + 1;
-	   end
-    end
+	always @(posedge clk) begin
+		if (reset) begin
+			ticks <= 0;
+		end else begin
+			ticks <= ticks + 1;
+		end
+	end
 
 
 	VexiiRiscv cpu_instance (
