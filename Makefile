@@ -2,11 +2,10 @@ include Makefile.conf
 
 OUTDIR := out
 ELF := $(OUTDIR)/firmware.elf
-FIRMWARE := $(OUTDIR)/image
-
+FIRMWARE := $(OUTDIR)/firmware.img
 MEMFILE := $(OUTDIR)/firmware.mem
 
-SRCDIRS := firmware
+SRCDIR := firmware
 
 SRC := $(shell find $(SRCDIRS) -type f \( -name "*.c" -o -name "*.S" \))
 OBJ := $(patsubst %.c, $(OUTDIR)/%.o, $(filter %.c,$(SRC))) $(patsubst %.S, $(OUTDIR)/%.o, $(filter %.S,$(SRC)))
@@ -36,6 +35,7 @@ bram:
 
 gencpu:
 	./scripts/generate_cpu.sh
+	mv external/VexiiRiscv/VexiiRiscv.v ip/VexiiRiscv.v
 
 clean:
 	rm -rf $(OUTDIR)
