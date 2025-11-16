@@ -9,12 +9,15 @@ endif
 SRCDIR := .
 
 SRC := \
-	$(SRCDIR)/entry.s \
-	$(SRCDIR)/main.c  \
-	$(SRCDIR)/uart.c
+	$(SRCDIR)/entry.S  \
+	$(SRCDIR)/main.c   \
+	$(SRCDIR)/print.c  \
+	$(SRCDIR)/serial.c \
+	$(SRCDIR)/test.c   \
+	$(SRCDIR)/uart.c  
 
 OBJ := $(patsubst $(SRCDIR)/%,$(BUILD_DIR)/%,$(SRC:.c=.o))
-OBJ := $(patsubst $(SRCDIR)/%,$(BUILD_DIR)/%,$(OBJ:.s=.o))
+OBJ := $(patsubst $(SRCDIR)/%,$(BUILD_DIR)/%,$(OBJ:.S=.o))
 
 ELF      := $(BUILD_DIR)/firmware.elf
 FIRMWARE := $(BUILD_DIR)/firmware.bin
@@ -34,7 +37,7 @@ $(BUILD_DIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(BUILD_DIR)
 	$(CC) $(CCFLAGS) -MMD -MP -c $< -o $@
 
-$(BUILD_DIR)/%.o: $(SRCDIR)/%.s
+$(BUILD_DIR)/%.o: $(SRCDIR)/%.S
 	@mkdir -p $(BUILD_DIR)
 	$(CC) $(CCFLAGS) -MMD -MP -c $< -o $@
 
