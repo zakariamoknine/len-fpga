@@ -1,5 +1,11 @@
 include ../Makefile.conf
 
+ifdef O
+	BUILD_DIR=$(shell readlink -m $(O))
+else
+	BUILD_DIR=$(CURDIR)/../build/firmware
+endif
+
 SRCDIR := .
 
 SRC := \

@@ -1,38 +1,40 @@
 include Makefile.conf
 
-SBI := $(BUILD_DIR)/opensbi.bin
-KERNEL := $(BUILD_DIR)/kernel.bin
+BUILD_DIR = $(CURDIR)/build
+
+SBI_BUILD_DIR := $(BUILD_DIR)/opensbi
+KERNEL_BUILD_DIR := $(BUILD_DIR)/len
+FIRMWARE_BUILD_DIR := $(BUILD_DIR)/firmware
 
 all: sbi
 
 sbi: kernel
-	make -C external/opensbi \
+	@mkdir -p $(dir $(SBI_BUILD_DIR))
+	$(MAKE) -C external/opensbi \
 		PLATFORM=len-fpga \
 		CROSS_COMPILE=$(SBI_CROSS_COMPILE) \
-		FW_PAYLOAD_PATH=$(BUILD_DIR)/kernel.bin
-	cp external/opensbi/build/platform/len-fpga/firmware/fw_payload.bin $(SBI)
+		FW_PAYLOAD_PATH=$(KERNEL_BUILD_DIR)/kernel.bin \
+		O=$(SBI_BUILD_DIR)
 
 kernel: firmware
-	make -C external/len
-	cp external/len/build/kernel.bin $(KERNEL)
+	@mkdir -p $(dir $(KERNEL_BUILD_DIR))
+	$(MAKE) -C external/len O=$(KERNEL_BUILD_DIR)
 
 firmware: 
-	mkdir -p build
-	make -C firmware
+	@mkdir -p $(dir $(FIRMWARE_BUILD_DIR))
+	$(MAKE) -C firmware O=$(FIRMWARE_BUILD_DIR)
 
-serial:
-	./scripts/serial_load.py
+serial_boot:
+	./scripts/serial_boot.py
 
 bram:
-	./scripts/update_bram.sh
+	./scripts/update_bram.sh $(FIRMWARE_BUILD_DIR)/firmware.mem
 
 cpu:
-	./scripts/generate_cpu.sh
+	./scripts/generate_riscv_cpu.sh
 	mv external/VexiiRiscv/VexiiRiscv.v ip/VexiiRiscv.v
 
 clean:
 	rm -rf $(BUILD_DIR)
-	make -C external/opensbi clean
-	make -C external/len clean
 
 .PHONY: all sbi kernel firmware serial bram cpu clean
