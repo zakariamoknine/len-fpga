@@ -37,4 +37,4 @@ cpu:
 clean:
 	rm -rf $(BUILD_DIR)
 
-.PHONY: all sbi kernel firmware serial bram cpu clean
+.PHONY: all sbi kernel firmware serial_boot bram cpu clean
