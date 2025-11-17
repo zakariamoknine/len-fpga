@@ -1,0 +1,45 @@
+/dts-v1/;
+/ {
+	#address-cells = <2>;
+	#size-cells = <2>;
+	compatible = "len-fpga";
+
+	chosen {
+		bootarg = "";
+		stdout-path = "uart0";
+		opensbi-config {
+			compatible = "opensbi,config";
+		};
+	};
+
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		cpu0: cpu@0 {
+			device_type = "cpu";
+			reg = <0>;
+			status = "okay";
+			clock-frequency = <100000000>;
+			i-cache-size = <32768>;
+			d-cache-size = <32768>;
+			mmu-type = "riscv,sv39";
+			riscv,isa = "rv64imac";
+		};
+	};
+
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0x00000000 0x80000000 0x00000000 0x08000000>;
+		status = "okay";
+	};
+
+	uart0: serial@44a00000 {
+		compatible = "ns16550a";
+		reg = <0x00000000 0x44a00000 0x00000000 0x00001000>;
+		status = "okay";
+		clock-frequency = <100000000>;
+		current-speed = <115200>;
+		reg-shift = <2>;
+		reg-io-width = <4>;
+	};
+};
