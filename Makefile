@@ -11,7 +11,7 @@ all: sbi
 sbi: kernel
 	@mkdir -p $(dir $(SBI_BUILD_DIR))
 	$(MAKE) -C external/opensbi \
-		PLATFORM=len-fpga \
+		PLATFORM=lenfpga \
 		CROSS_COMPILE=$(SBI_CROSS_COMPILE) \
 		FW_PAYLOAD_PATH=$(KERNEL_BUILD_DIR)/kernel.bin \
 		O=$(SBI_BUILD_DIR)
