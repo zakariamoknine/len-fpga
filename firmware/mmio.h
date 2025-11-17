@@ -29,7 +29,7 @@
 /*
  * DDR2 SDRAM
  */
-#define DDR2_BASE         0x80000000UL
-#define DDR2_SIZE         (128UL * 1024 * 1024)
+#define DDR2_BASE        0x80000000UL
+#define DDR2_SIZE        (128UL * 1024 * 1024) /* 128MiB */
 
 #endif /* !_LEN_FPGA_MMIO_H_ */

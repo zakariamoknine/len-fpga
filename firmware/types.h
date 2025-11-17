@@ -2,7 +2,7 @@
 #define _LEN_FPGA_TYPES_H_
 
 #if __riscv_xlen != 64
-	#error "len-fpga firmware works only on 64-bit processors"
+	#error "len-fpga firmware works only on 64-bit configs"
 #endif
 
 #undef NULL
