@@ -7,10 +7,10 @@
 # All optional drivers or libraries for this platform should
 # be enabled via configs/defconfig of this platform.
 #
-config PLATFORM_LEN_FPGA
+config PLATFORM_LENFPGA
 	bool
-	select IPI_MSWI
-	select IRQCHIP_PLIC
+#	select IPI_MSWI
+#	select IRQCHIP_PLIC
 	select SERIAL_UART8250
-	select TIMER_MTIMER
+#	select TIMER_MTIMER
 	default y
