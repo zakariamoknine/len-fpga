@@ -7,7 +7,7 @@ import sys
 
 SERIAL_PORT = "/dev/ttyUSB1"
 BAUDRATE = 115200
-PAYLOAD_FILE = "build/opensbi/platform/generic/firmware/fw_payload.bin"
+PAYLOAD_FILE = "build/opensbi-1.7/platform/generic/firmware/fw_payload.bin"
 
 SERIAL_MAGIC = 0x0dca18fb
 LOAD_ADDR = 0x80000000
