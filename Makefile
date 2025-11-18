@@ -2,7 +2,7 @@ include Makefile.conf
 
 BUILD_DIR = $(CURDIR)/build
 
-SBI_BUILD_DIR := $(BUILD_DIR)/opensbi-1.7
+SBI_BUILD_DIR := $(BUILD_DIR)/opensbi
 KERNEL_BUILD_DIR := $(BUILD_DIR)/len
 FIRMWARE_BUILD_DIR := $(BUILD_DIR)/firmware
 DTB_BUILD_DIR := $(BUILD_DIR)/dtb
@@ -12,7 +12,7 @@ all: sbi
 sbi: kernel
 	@mkdir -p $(dir $(SBI_BUILD_DIR))
 
-	$(MAKE) -C external/opensbi-1.7 \
+	$(MAKE) -C external/opensbi \
 		PLATFORM=generic \
 		CROSS_COMPILE=$(SBI_CROSS_COMPILE) \
 		FW_TEXT_START=0x80000000 \

@@ -4,3 +4,6 @@
 [submodule "external/len"]
 	path = external/len
 	url = https://github.com/zakariamoknine/len
+[submodule "external/opensbi"]
+	path = external/opensbi
+	url = https://github.com/zakariamoknine/opensbi
