@@ -37,7 +37,7 @@ def main():
         ser.write(header)
         ser.flush()
 
-        time.sleep(1);
+        time.sleep(0.5);
 
         print("Sending payload...")
         chunk_size = 1024
