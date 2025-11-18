@@ -81,11 +81,10 @@ module riscv_cpu (
 	output wire          AXI_DP_rready,
 	input  wire [63:0]   AXI_DP_rdata,
 	input  wire [1:0]    AXI_DP_rresp,
-	input  wire          AXI_DP_rlast
+	input  wire          AXI_DP_rlast,
 
-	//input  wire [63:0]   logic_rdtime,
-	//input  wire          inturrupt_m_timer,
-	//input  wire          inturrupt_m_software,
+	input  wire          timer_intr,
+	input  wire          software_intr
 	//input  wire          inturrupt_m_external,
 	//input  wire          inturrupt_s_external
 );
@@ -185,8 +184,8 @@ module riscv_cpu (
 		.LsuCachelessAxi4Plugin_logic_axi_r_payload_last(AXI_DP_rlast),
 
 		.PrivilegedPlugin_logic_rdtime(ticks),
-		.PrivilegedPlugin_logic_harts_0_int_m_timer(1'b0),
-		.PrivilegedPlugin_logic_harts_0_int_m_software(1'b0),
+		.PrivilegedPlugin_logic_harts_0_int_m_timer(timer_intr),
+		.PrivilegedPlugin_logic_harts_0_int_m_software(software_intr),
 		.PrivilegedPlugin_logic_harts_0_int_m_external(1'b0),
 		.PrivilegedPlugin_logic_harts_0_int_s_external(1'b0)
 	);
