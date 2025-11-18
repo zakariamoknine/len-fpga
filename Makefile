@@ -13,12 +13,11 @@ sbi: kernel
 	@mkdir -p $(dir $(SBI_BUILD_DIR))
 
 	$(MAKE) -C external/opensbi \
-		PLATFORM=generic \
+		PLATFORM=len \
 		CROSS_COMPILE=$(SBI_CROSS_COMPILE) \
 		FW_TEXT_START=0x80000000 \
 		FW_FDT_PATH=$(DTB_BUILD_DIR)/len-fpga.dtb \
 		FW_PAYLOAD_PATH=$(KERNEL_BUILD_DIR)/kernel.bin \
-		FW_PAYLOAD_FDT_ADDR=0x82200000 \
 		O=$(SBI_BUILD_DIR)
 
 
