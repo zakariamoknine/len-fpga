@@ -16,6 +16,7 @@ sbt "Test/runMain vexiiriscv.Generate
 	--with-btb --with-ras --with-gshare \
 	--with-rdtime \
 	--region base=00000000,size=1000000,main=1,exe=1 \
+	--region base=30000000,size=1000000,main=0,exe=0 \
 	--region base=40000000,size=1000000,main=0,exe=0 \
 	--region base=44A00000,size=1000000,main=0,exe=0 \
 	--region base=80000000,size=8000000,main=1,exe=1"
