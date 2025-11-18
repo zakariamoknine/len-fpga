@@ -6,4 +6,4 @@
 	url = https://github.com/zakariamoknine/len
 [submodule "external/opensbi"]
 	path = external/opensbi
-	url = https://github.com/zakariamoknine/opensbi
+	url = https://github.com/riscv-software-src/opensbi

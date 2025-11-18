@@ -13,7 +13,7 @@ sbi: kernel
 	@mkdir -p $(dir $(SBI_BUILD_DIR))
 
 	$(MAKE) -C external/opensbi \
-		PLATFORM=len \
+		PLATFORM=generic \
 		CROSS_COMPILE=$(SBI_CROSS_COMPILE) \
 		FW_TEXT_START=0x80000000 \
 		FW_FDT_PATH=$(DTB_BUILD_DIR)/len-fpga.dtb \
