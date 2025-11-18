@@ -52,12 +52,12 @@ def main():
             percent = (total_sent * 100) // payload_size
             print(f"\rProgress: {percent}%", end="", flush=True)
 
-            time.sleep(0.001)
+            time.sleep(0.0001)
 
         print("\nDone sending payload!")
 
         while True:
-            data = ser.read(256)
+            data = ser.read(1)
             if data:
                 sys.stdout.write(data.decode("latin1", errors="replace"))
                 sys.stdout.flush()
