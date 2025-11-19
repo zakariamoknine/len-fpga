@@ -2,19 +2,21 @@
 / {
 	#address-cells = <2>;
 	#size-cells = <2>;
-	compatible = "len-fpga";
+
+	aliases {
+		serial0 = &uart0;
+	};
 
 	chosen {
-		bootarg = "";
-		stdout-path = "uart0";
-		opensbi-config {
-			compatible = "opensbi,config";
-		};
+		bootargs = "";
+		stdout-path = "serial0";
 	};
 
 	cpus {
 		#address-cells = <1>;
 		#size-cells = <0>;
+		timebase-frequency = <100000000>;
+
 		cpu0: cpu@0 {
 			device_type = "cpu";
 			reg = <0>;
@@ -24,6 +26,13 @@
 			d-cache-size = <32768>;
 			mmu-type = "riscv,sv39";
 			riscv,isa = "rv64imac";
+			cpu0_intc: interrupt-controller {
+				#interrupt-cells = <1>;
+				#address-cells = <0>;
+				#size-cells = <0>;
+				compatible = "riscv,cpu-intc";
+				interrupt-controller;
+			};
 		};
 	};
 
@@ -33,14 +42,8 @@
 		status = "okay";
 	};
 
-	clint0: clint@30000000 {
-		compatible = "riscv,clint0";
-		reg = <0x00000000 0x30000000 0x00000000 0x00010000>;
-		status = "okay";
-		interrupts-extended = <&cpu0 3 &cpu0 7>;
-	};
-
 	uart0: serial@44a00000 {
+		device_type = "serial";
 		compatible = "ns16550a";
 		reg = <0x00000000 0x44a00000 0x00000000 0x00010000>;
 		status = "okay";
@@ -48,5 +51,13 @@
 		current-speed = <115200>;
 		reg-shift = <2>;
 		reg-io-width = <4>;
+		reg-offset = <0>
+	};
+
+	clint0: clint@30000000 {
+		compatible = "sifive,clint0";
+		reg = <0x00000000 0x30000000 0x00000000 0x00010000>;
+		status = "okay";
+		interrupts-extended = <&cpu0_intc 3 &cpu0_intc 7>;
 	};
 };
