@@ -27,6 +27,14 @@
 #define MCR_RTS          (1 << 1)
 
 /*
+ * CLINT
+ */
+#define CLINT_BASE       0x30000000
+#define CLINT_MSIP       (CLINT_BASE)
+#define CLINT_MTIMECMP   (CLINT_BASE + 0x4000)
+#define CLINT_MTIME      (CLINT_BASE + 0xBFF8)
+
+/*
  * DDR2 SDRAM
  */
 #define DDR2_BASE        0x80000000UL
