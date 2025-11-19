@@ -51,7 +51,7 @@
 		current-speed = <115200>;
 		reg-shift = <2>;
 		reg-io-width = <4>;
-		reg-offset = <0>
+		reg-offset = <0>;
 	};
 
 	clint0: clint@30000000 {
