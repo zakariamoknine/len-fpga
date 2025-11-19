@@ -33,9 +33,16 @@
 		status = "okay";
 	};
 
+	clint0: clint@30000000 {
+		compatible = "riscv,clint0";
+		reg = <0x00000000 0x30000000 0x00000000 0x00010000>;
+		status = "okay";
+		interrupts-extended = <&cpu0 3 &cpu0 7>;
+	};
+
 	uart0: serial@44a00000 {
 		compatible = "ns16550a";
-		reg = <0x00000000 0x44a00000 0x00000000 0x00001000>;
+		reg = <0x00000000 0x44a00000 0x00000000 0x00010000>;
 		status = "okay";
 		clock-frequency = <100000000>;
 		current-speed = <115200>;
