@@ -20,7 +20,6 @@ def main():
     payload_size = len(payload)
     print(f"Payload size: {payload_size} bytes")
 
-    #
     # firmware/serial.h:
     #
     # struct serial_header {
@@ -29,7 +28,6 @@ def main():
     #     uint32_t load_addr;
     #     uint32_t entry_addr;
     # }
-    #
     header = struct.pack("<IIII", SERIAL_MAGIC, payload_size, LOAD_ADDR, ENTRY_ADDR)
 
     with serial.Serial(SERIAL_PORT, BAUDRATE, timeout=1) as ser:
