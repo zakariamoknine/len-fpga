@@ -27,9 +27,9 @@
 			mmu-type = "riscv,sv39";
 			riscv,isa = "rv64imac";
 			cpu0_intc: interrupt-controller {
-				#interrupt-cells = <1>;
 				#address-cells = <0>;
 				#size-cells = <0>;
+				#interrupt-cells = <1>;
 				compatible = "riscv,cpu-intc";
 				interrupt-controller;
 			};
