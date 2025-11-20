@@ -12,9 +12,9 @@ module vga_controller (
 	input  wire        bram_rsta,
 	input  wire [ 3:0] bram_wea,
 
-	output reg  [ 3:0] vga_r,
-	output reg  [ 3:0] vga_g,
-	output reg  [ 3:0] vga_b,
+	output wire [ 3:0] vga_red,
+	output wire [ 3:0] vga_green,
+	output wire [ 3:0] vga_blue,
 	output wire        vga_hsync,
 	output wire        vga_vsync
 );
