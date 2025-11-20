@@ -14,6 +14,8 @@ LOAD_ADDR = 0x80000000
 ENTRY_ADDR = 0x80000000
 
 def main():
+    print("======== SERIAL BOOT ========")
+
     with open(PAYLOAD_FILE, "rb") as f:
         payload = f.read()
 
@@ -50,9 +52,12 @@ def main():
             percent = (total_sent * 100) // payload_size
             print(f"\rProgress: {percent}%", end="", flush=True)
 
+            # To eliminate data loss, otherwise there is a very
+            # high chance we will lose some bytes, tested with
+            # 115200 baudrate
             time.sleep(0.0001)
 
-        print("\nDone sending payload!")
+        print("============ DONE ===========")
 
         while True:
             data = ser.read(1)
