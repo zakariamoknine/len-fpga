@@ -34,8 +34,7 @@ sbt "Test/runMain vexiiriscv.Generate
 #	--with-rdtime \
 #	--region base=00000000,size=1000000,main=1,exe=1 \
 #	--region base=80000000,size=8000000,main=1,exe=1 \
-#	--region base=40000000,size=1000000,main=0,exe=0 \
-#	--region base=44A00000,size=1000000,main=0,exe=0"
+#	--region base=10000000,size=6FFFFFFF,main=0,exe=0"
 
 #
 # CONFIG: 64-BIT SIMPLE
@@ -50,8 +49,7 @@ sbt "Test/runMain vexiiriscv.Generate
 #	--with-rdtime \
 #	--region base=00000000,size=1000000,main=1,exe=1 \
 #	--region base=80000000,size=8000000,main=1,exe=1 \
-#	--region base=40000000,size=1000000,main=0,exe=0 \
-#	--region base=44A00000,size=1000000,main=0,exe=0"
+#	--region base=10000000,size=6FFFFFFF,main=0,exe=0"
 
 #
 # CONFIG: 32-BIT SIMPLE
@@ -66,6 +64,4 @@ sbt "Test/runMain vexiiriscv.Generate
 #	--with-rdtime \
 #	--region base=00000000,size=1000000,main=1,exe=1 \
 #	--region base=80000000,size=8000000,main=1,exe=1 \
-#	--region base=40000000,size=1000000,main=0,exe=0 \
-#	--region base=44A00000,size=1000000,main=0,exe=0"
-
+#	--region base=10000000,size=6FFFFFFF,main=0,exe=0"
