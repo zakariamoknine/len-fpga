@@ -1,6 +1,6 @@
 root = true
 
-[{*.{c,h,mk,s,S,v},Makefile,Makefile.*}]
+[{*.{c,h,mk,s,S,ld,v,sh,py,dts},Makefile,Makefile.*}]
 charset = utf-8
 end_of_line = lf
 insert_final_newline = true
