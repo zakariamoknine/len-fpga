@@ -20,14 +20,14 @@ void test_ddr2(void)
 	for (uint32_t i = 0; i < DDR2_WORDS; i++) {
 		uint32_t exp = 0xAAAAAAAA ^ i;
 		if (memory[i] != exp) {
-			print("DDR ERROR at %08x: got %08x expected %08x\n",
-					(DDR2_BASE + i*4), memory[i], exp);
+			print("DDR ERROR at %08x: got %08x expected
+				       	%08x\n", (DDR2_BASE + i*4),
+				       	memory[i], exp);
 			return;
 		}
 	}
 
-	print("DDR2 test: ");
-	print("\033[1;32mPass\033[0m\n");
+	print("DDR2 test: Pass!");
 }
 
 static inline uint64_t read_time(void)
@@ -41,9 +41,11 @@ void test_rdtime(void)
 {
 	print("rdtime test starting...\n");
 
-	while (1) {
-		uint64_t t = read_time();
-		print("rdtime = %x\n", (uint64_t)t);
+	int t = 100;
+
+	while (t--) {
+		uint64_t tick = read_time();
+		print("rdtime = %x\n", (uint64_t)tick);
 
 		for (volatile int i = 0; i < 1000000; i++);
 	}
