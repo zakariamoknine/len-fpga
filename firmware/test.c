@@ -20,8 +20,8 @@ void test_ddr2(void)
 	for (uint32_t i = 0; i < DDR2_WORDS; i++) {
 		uint32_t exp = 0xAAAAAAAA ^ i;
 		if (memory[i] != exp) {
-			print("DDR ERROR at %08x: got %08x expected
-				       	%08x\n", (DDR2_BASE + i*4),
+			print("DDR ERROR at %08x: got %08x expected"
+				       	"%08x\n", (DDR2_BASE + i*4),
 				       	memory[i], exp);
 			return;
 		}
