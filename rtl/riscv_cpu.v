@@ -84,7 +84,7 @@ module riscv_cpu (
 	input  wire          AXI_DP_rlast,
 
 	input  wire          timer_intr,
-	input  wire          software_intr
+	input  wire          sftwr_intr
 	//input  wire          inturrupt_m_external,
 	//input  wire          inturrupt_s_external
 );
@@ -98,7 +98,6 @@ module riscv_cpu (
 			ticks <= ticks + 1;
 		end
 	end
-
 
 	VexiiRiscv cpu_instance (
 		.clk(clk),
@@ -185,7 +184,7 @@ module riscv_cpu (
 
 		.PrivilegedPlugin_logic_rdtime(ticks),
 		.PrivilegedPlugin_logic_harts_0_int_m_timer(timer_intr),
-		.PrivilegedPlugin_logic_harts_0_int_m_software(software_intr),
+		.PrivilegedPlugin_logic_harts_0_int_m_software(sftwr_intr),
 		.PrivilegedPlugin_logic_harts_0_int_m_external(1'b0),
 		.PrivilegedPlugin_logic_harts_0_int_s_external(1'b0)
 	);
