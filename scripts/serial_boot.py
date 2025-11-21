@@ -14,7 +14,7 @@ LOAD_ADDR = 0x80000000
 ENTRY_ADDR = 0x80000000
 
 def main():
-    print("======== SERIAL BOOT ========")
+    print("================ SERIAL BOOT ================")
 
     with open(PAYLOAD_FILE, "rb") as f:
         payload = f.read()
@@ -57,7 +57,7 @@ def main():
             # 115200 baudrate
             time.sleep(0.0001)
 
-        print("============ DONE ===========")
+        print("==================== DONE ===================")
 
         while True:
             data = ser.read(1)
