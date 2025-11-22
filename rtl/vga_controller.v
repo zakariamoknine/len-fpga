@@ -12,9 +12,9 @@ module vga_controller (
 	input  wire [ 3:0] bram_wea,
 	
 	/* VGA signals */
-	output reg  [ 3:0] vga_red,
-	output reg  [ 3:0] vga_green,
-	output reg  [ 3:0] vga_blue,
+	output wire [ 3:0] vga_red,
+	output wire [ 3:0] vga_green,
+	output wire [ 3:0] vga_blue,
 	output wire        vga_hsync,
 	output wire        vga_vsync
 );
@@ -57,7 +57,12 @@ module vga_controller (
 
 	reg [ 1:0] byte_index_stage1;
 	reg [ 1:0] byte_index_stage2;
+
 	reg [ 7:0] pixel_byte_stage3;
+
+	reg [ 3:0] vga_red_stage4;
+	reg [ 3:0] vga_green_stage4;
+	reg [ 3:0] vga_blue_stage4;
 
 	/* Pipeline inputs */
 	wire [18:0] pixel_addr;
@@ -70,9 +75,9 @@ module vga_controller (
 
 	assign hsync = ~((hcount >= (H_VISIBLE + H_FRONT_PORCH)) &&
 		(hcount <  (H_VISIBLE + H_FRONT_PORCH + H_SYNC_PULSE)));
-		
 	assign vsync = ~((vcount >= (V_VISIBLE + V_FRONT_PORCH)) &&
 		(vcount <  (V_VISIBLE + V_FRONT_PORCH + V_SYNC_PULSE)));
+
 	assign visible = (hcount < H_VISIBLE) && (vcount < V_VISIBLE);
 
 	assign pixel_addr = ((vcount << 9) + (vcount << 7)) + hcount;
@@ -185,25 +190,29 @@ module vga_controller (
 	assign vga_hsync = hsync_pipe[PIPELINE_DEPTH-1];
 	assign vga_vsync = vsync_pipe[PIPELINE_DEPTH-1];
 
+	assign vga_red = vga_red_stage4;
+	assign vga_green = vga_green_stage4;
+	assign vga_blue = vga_blue_stage4;
+
 	always @(posedge clk) begin
 		if (!resetn) begin
-			vga_red   <= 0;
-			vga_green <= 0;
-			vga_blue  <= 0;
+			vga_red_stage4   <= 0;
+			vga_green_stage4 <= 0;
+			vga_blue_stage4  <= 0;
 		end else if (visible_pipe[PIPELINE_DEPTH-1]) begin
-			vga_red   <= {pixel_byte_stage3[7:5],
-			       	      pixel_byte_stage3[7]};
+			vga_red_stage4   <= {pixel_byte_stage3[7:5],
+					     pixel_byte_stage3[7]};
 
-			vga_green <= {pixel_byte_stage3[4:2],
-				      pixel_byte_stage3[4]};
+			vga_green_stage4 <= {pixel_byte_stage3[4:2],
+					     pixel_byte_stage3[4]};
 
-			vga_blue  <= {pixel_byte_stage3[1:0],
-				      pixel_byte_stage3[1],
-				      pixel_byte_stage3[0]};
+			vga_blue_stage4  <= {pixel_byte_stage3[1:0],
+					     pixel_byte_stage3[1],
+					     pixel_byte_stage3[0]};
 		end else begin
-			vga_red   <= 0;
-			vga_green <= 0;
-			vga_blue  <= 0;
+			vga_red_stage4   <= 0;
+			vga_green_stage4 <= 0;
+			vga_blue_stage4  <= 0;
 		end
 	end
 
