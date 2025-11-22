@@ -39,6 +39,8 @@ int serial_load(int jump_to_payload)
 	load_addr = ph.load_addr;
 	entry_addr = ph.entry_addr;
 
+	print("Serial loading... Waiting for data\n");
+
 	if (ph.magic != SERIAL_MAGIC) {
 		print("Invalid magic number: %x\n", ph.magic);
 		return -1;

@@ -1,10 +1,10 @@
 #include "print.h"
 #include "serial.h"
 
-void start()
+void start(void)
 {
-	uart_init(115200, 100000000);
-	print("len-fpga booting...\n");
+	uart_init(UART_BAUDRATE, UART_CLK_FREQ);
+	print("len-fpga is booting...\n");
 
 	serial_load(true);
 
