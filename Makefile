@@ -1,10 +1,11 @@
 include Makefile.conf
 
-BUILD_DIR = $(CURDIR)/build
+BUILD_DIR = $(PWD)/build
 
 SBI_BUILD_DIR := $(BUILD_DIR)/opensbi
 KERNEL_BUILD_DIR := $(BUILD_DIR)/len
 FIRMWARE_BUILD_DIR := $(BUILD_DIR)/firmware
+TEST_BUILD_DIR := $(BUILD_DIR)/test
 DTB_BUILD_DIR := $(BUILD_DIR)/dtb
 
 all: sbi
@@ -22,7 +23,6 @@ sbi: kernel
 		FW_PAYLOAD_FDT_OFFSET=0x2200000 \
 		O=$(SBI_BUILD_DIR)
 
-
 kernel: firmware
 	@mkdir -p $(dir $(KERNEL_BUILD_DIR))
 	$(MAKE) -C external/len O=$(KERNEL_BUILD_DIR)
@@ -33,19 +33,25 @@ firmware: dtb
 
 dtb:
 	@mkdir -p $(DTB_BUILD_DIR)
-	$(DTC) -I dts -O dtb -o $(DTB_BUILD_DIR)/len-fpga.dtb $(CURDIR)/dts/len-fpga.dts
+	$(DTC) -I dts -O dtb -o $(DTB_BUILD_DIR)/len-fpga.dtb $(PWD)/dts/len-fpga.dts
+
+test:
+	@mkdir -p $(dir $(TEST_BUILD_DIR))
+	$(MAKE) -C test O=$(TEST_BUILD_DIR)
 
 serial_boot:
-	./scripts/serial_boot.py
+	./scripts/serial_boot.py \
+		$(PWD)/build/opensbi/platform/generic/firmware/fw_payload.bin \
+	       	-p /dev/ttyUSB1 -b 115200
 
 bram:
 	./scripts/update_bram.sh $(FIRMWARE_BUILD_DIR)/firmware.mem
 
 cpu:
 	./scripts/generate_riscv_cpu.sh
-	mv external/VexiiRiscv/VexiiRiscv.v ip/VexiiRiscv.v
+	@mv external/VexiiRiscv/VexiiRiscv.v ip/VexiiRiscv.v
 
 clean:
 	rm -rf $(BUILD_DIR)
 
-.PHONY: all sbi kernel firmware dtb serial_boot bram cpu clean
+.PHONY: all sbi kernel firmware dtb test serial_boot bram cpu clean
