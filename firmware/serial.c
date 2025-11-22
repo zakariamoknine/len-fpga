@@ -58,7 +58,7 @@ int serial_load(int jump_to_payload)
 		return -1;
 	}
 
-	print("Serial loading...\n");
+	print("Header parsed successfully!\n");
 	print("Payload size : %d bytes\n", ph.size);
 	print("Payload addr : %p\n", load_addr);
 	print("Entry addr   : %p\n", entry_addr);
