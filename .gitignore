@@ -17,3 +17,5 @@ build/
 *.xpr
 
 *.mmi
+
+tests/
