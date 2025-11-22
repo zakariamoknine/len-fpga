@@ -6,6 +6,9 @@
  */
 #define UART_BASE        0x44A00000UL
 
+#define UART_CLK_FREQ    100000000
+#define UART_BAUDRATE    115200
+
 #define UART_RBR         0x00
 #define UART_THR         0x00
 #define UART_DLL         0x00
@@ -39,5 +42,13 @@
  */
 #define DDR2_BASE        0x80000000UL
 #define DDR2_SIZE        (128UL * 1024 * 1024) /* 128MiB */
+
+/*
+ * FRAMEBUFFER
+ */
+#define FB_BASE          0x2B000000
+#define FB_WIDTH         640
+#define FB_HEIGHT        480
+#define FB_BPP           1
 
 #endif /* !_LEN_FPGA_MMIO_H_ */
