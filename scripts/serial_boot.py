@@ -4,40 +4,55 @@ import serial
 import struct
 import time
 import sys
-
-SERIAL_PORT = "/dev/ttyUSB1"
-BAUDRATE = 115200
-PAYLOAD_FILE = "build/opensbi/platform/generic/firmware/fw_payload.bin"
+import argparse
 
 SERIAL_MAGIC = 0x0dca18fb
 LOAD_ADDR = 0x80000000
 ENTRY_ADDR = 0x80000000
 
 def main():
-    print("================ SERIAL BOOT ================")
+    parser = argparse.ArgumentParser(description="Send a payload over serial boot.")
+    parser.add_argument(
+            "payload_file",
+            help="Path to the fw_payload.bin file"
+            )
+    parser.add_argument(
+            "-p", "--port",
+            default="/dev/ttyUSB1",
+            help="Serial port to use (default: /dev/ttyUSB1)"
+            )
+    parser.add_argument(
+            "-b", "--baudrate",
+            type=int,
+            default=115200,
+            help="Baudrate to use (default: 115200)"
+            )
 
-    with open(PAYLOAD_FILE, "rb") as f:
+    args = parser.parse_args()
+
+    payload_file = args.payload_file
+    serial_port = args.port
+    baudrate = args.baudrate
+
+    print("================ SERIAL BOOT ================")
+    print(f"Using serial port: {serial_port}")
+    print(f"Baudrate: {baudrate}")
+    print(f"Payload file: {payload_file}")
+
+    with open(payload_file, "rb") as f:
         payload = f.read()
 
     payload_size = len(payload)
     print(f"Payload size: {payload_size} bytes")
 
-    # firmware/serial.h:
-    #
-    # struct serial_header {
-    #     uint32_t magic;
-    #     uint32_t size;
-    #     uint32_t load_addr;
-    #     uint32_t entry_addr;
-    # }
     header = struct.pack("<IIII", SERIAL_MAGIC, payload_size, LOAD_ADDR, ENTRY_ADDR)
 
-    with serial.Serial(SERIAL_PORT, BAUDRATE, timeout=1) as ser:
-        print(f"Sending header...")
+    with serial.Serial(serial_port, baudrate, timeout=1) as ser:
+        print("Sending header...")
         ser.write(header)
         ser.flush()
 
-        time.sleep(0.5);
+        time.sleep(0.5)
 
         print("Sending payload...")
         chunk_size = 1024
@@ -52,12 +67,9 @@ def main():
             percent = (total_sent * 100) // payload_size
             print(f"\rProgress: {percent}%", end="", flush=True)
 
-            # To eliminate data loss, otherwise there is a very
-            # high chance we will lose some bytes, tested with
-            # 115200 baudrate
             time.sleep(0.0001)
 
-        print("==================== DONE ===================")
+        print("\n==================== DONE ===================\n\n")
 
         while True:
             data = ser.read(1)
