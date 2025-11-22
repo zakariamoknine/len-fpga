@@ -18,4 +18,4 @@ build/
 
 *.mmi
 
-tests/
+test/
