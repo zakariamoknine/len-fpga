@@ -14,6 +14,7 @@ sbt "Test/runMain vexiiriscv.Generate
 	--lsu-l1 --lsu-axi4 --lsu-l1-axi4 --lsu-l1-ways=4 --lsu-l1-mem-data-width-min=64 --with-lsu-bypass \
 	--fetch-l1 --fetch-axi4 --fetch-l1-ways=4 --fetch-l1-mem-data-width-min=64 \
 	--with-btb --with-ras --with-gshare \
+	--with-rvf --with-rvd --fma-reduced-accuracy --fpu-ignore-subnormal \
 	--with-rdtime \
 	--region base=00000000,size=1000000,main=1,exe=1 \
 	--region base=80000000,size=8000000,main=1,exe=1 \
