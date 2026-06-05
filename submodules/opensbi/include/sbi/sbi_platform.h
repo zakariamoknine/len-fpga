@@ -149,6 +149,14 @@ struct sbi_platform_operations {
 			unsigned long log2len);
 	/** platform specific pmp disable on current HART */
 	void (*pmp_disable)(unsigned int n);
+
+	/** platform specific Smrnmi handlers init on current HART */
+	void (*smrnmi_handlers_init)(void (*rnmi_handler)(void),
+			void (*rnme_handler)(void));
+
+	/** platform specific Smrnmi NMI handler.
+	 *  Returns SBI_SUCCESS on success, error code if NMI cannot be handled. */
+	int (*rnmi_handler)(struct sbi_trap_context *tcntx);
 };
 
 /** Platform default per-HART stack size for exception/interrupt handling */

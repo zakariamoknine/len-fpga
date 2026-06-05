@@ -16,6 +16,13 @@
 
 struct sbi_scratch;
 
+/** irqchip message signalled interrupt (MSI) */
+struct sbi_irqchip_msi_msg {
+	u32 address_lo;
+	u32 address_hi;
+	u32 data;
+};
+
 /** irqchip hardware device */
 struct sbi_irqchip_device {
 	/** Node in the list of irqchip devices (private) */
@@ -43,13 +50,26 @@ struct sbi_irqchip_device {
 	int (*process_hwirqs)(struct sbi_irqchip_device *chip);
 
 	/** Setup a hardware interrupt of this irqchip */
-	int (*hwirq_setup)(struct sbi_irqchip_device *chip, u32 hwirq);
+	int (*hwirq_setup)(struct sbi_irqchip_device *chip, u32 hwirq,
+			   u32 hwirq_flags);
+#define SBI_HWIRQ_FLAGS_NONE			0x00000000UL
+#define SBI_HWIRQ_FLAGS_EDGE_RISING		0x00000001UL
+#define SBI_HWIRQ_FLAGS_EDGE_FALLING		0x00000002UL
+#define SBI_HWIRQ_FLAGS_EDGE_BOTH		(SBI_HWIRQ_FLAGS_EDGE_RISING | \
+						 SBI_HWIRQ_FLAGS_EDGE_FALLING)
+#define SBI_HWIRQ_FLAGS_LEVEL_HIGH		0x00000004UL
+#define SBI_HWIRQ_FLAGS_LEVEL_LOW		0x00000008UL
+#define SBI_HWIRQ_FLAGS_LEVEL_SENSE_MASK	0x0000000fUL
 
 	/** Cleanup a hardware interrupt of this irqchip */
 	void (*hwirq_cleanup)(struct sbi_irqchip_device *chip, u32 hwirq);
 
 	/** End of hardware interrupt of this irqchip */
 	void (*hwirq_eoi)(struct sbi_irqchip_device *chip, u32 hwirq);
+
+	/** Set hardware interrupt affinity */
+	int (*hwirq_set_affinity)(struct sbi_irqchip_device *chip, u32 hwirq,
+				  u32 hart_index);
 
 	/** Mask a hardware interrupt of this irqchip */
 	void (*hwirq_mask)(struct sbi_irqchip_device *chip, u32 hwirq);
@@ -89,10 +109,33 @@ int sbi_irqchip_raw_handler_default(struct sbi_irqchip_device *chip, u32 hwirq);
 int sbi_irqchip_set_raw_handler(struct sbi_irqchip_device *chip, u32 hwirq,
 				int (*raw_hndl)(struct sbi_irqchip_device *, u32));
 
+/** Get hardware interrupt affinity */
+int sbi_irqchip_get_affinity(struct sbi_irqchip_device *chip, u32 hwirq,
+			     u32 *out_hart_index);
+
+/** Set hardware interrupt affinity */
+int sbi_irqchip_set_affinity(struct sbi_irqchip_device *chip, u32 hwirq, u32 hart_index);
+
+/** Write MSI message to the hardware interrupt handler */
+int sbi_irqchip_write_msi(struct sbi_irqchip_device *chip, u32 hwirq,
+			  const struct sbi_irqchip_msi_msg *msg);
+
+/** Register a hardware MSI handler */
+int sbi_irqchip_register_msi(struct sbi_irqchip_device *chip, u32 num_hwirq,
+			     void (*write_msi)(u32 hwirq,
+					       const struct sbi_irqchip_msi_msg *msg,
+					       void *priv),
+			     int (*callback)(u32 hwirq, void *priv), void *priv,
+			     u32 *out_first_hwirq);
+
 /** Register a hardware interrupt handler */
 int sbi_irqchip_register_handler(struct sbi_irqchip_device *chip,
-				 u32 first_hwirq, u32 num_hwirq,
-				 int (*callback)(u32 hwirq, void *opaque), void *opaque);
+				 u32 first_hwirq, u32 num_hwirq, u32 hwirq_flags,
+				 int (*callback)(u32 hwirq, void *priv), void *priv);
+
+/** Register a hardware interrupts as reserved */
+int sbi_irqchip_register_reserved(struct sbi_irqchip_device *chip,
+				  u32 first_hwirq, u32 num_hwirq);
 
 /** Unregister a hardware interrupt handler */
 int sbi_irqchip_unregister_handler(struct sbi_irqchip_device *chip,
