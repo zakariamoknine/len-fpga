@@ -1,0 +1,95 @@
+/dts-v1/;
+/ {
+	#address-cells = <2>;
+	#size-cells = <2>;
+
+	aliases {
+		serial0 = &uart0;
+	};
+
+	chosen {
+		bootargs = "";
+		stdout-path = "serial0";
+	};
+
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		timebase-frequency = <100000000>;
+
+		cpu0: cpu@0 {
+			device_type = "cpu";
+			reg = <0>;
+			status = "okay";
+			clock-frequency = <100000000>;
+			i-cache-size = <8192>;
+			d-cache-size = <8192>;
+			mmu-type = "riscv,sv39";
+			riscv,isa = "rv64gc";
+			cpu0_intc: interrupt-controller {
+				#address-cells = <0>;
+				#size-cells = <0>;
+				#interrupt-cells = <1>;
+				compatible = "riscv,cpu-intc";
+				interrupt-controller;
+			};
+		};
+	};
+
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0x00000000 0x80000000 0x00000000 0x08000000>;
+		status = "okay";
+	};
+
+	plic0: interrupt-controller@3A000000 {
+		#interrupt-cells = <1>;
+		#address-cells = <2>;
+		compatible = "riscv,plic0";
+		reg = <0x00000000 0x50000000 0x00000000 0x10000000>;
+		status = "okay";
+		riscv,ndev = <32>;
+		interrupts-extended = <&cpu0_intc 9 &cpu0_intc 11>;
+		interrupt-controller;
+	};
+
+	clint0: clint@30000000 {
+		compatible = "sifive,clint0";
+		reg = <0x00000000 0x5A000000 0x00000000 0x00010000>;
+		status = "okay";
+		interrupts-extended = <&cpu0_intc 3 &cpu0_intc 7>;
+	};
+
+	uart0: serial@4a000000 {
+		device_type = "serial";
+		compatible = "ns16550a";
+		reg = <0x00000000 0x4A000000 0x00000000 0x00010000>;
+		status = "okay";
+		clock-frequency = <100000000>;
+		current-speed = <460800>;
+		reg-shift = <2>;
+		reg-io-width = <4>;
+		reg-offset = <0>;
+		interrupt-parent = <&plic0>;
+		interrupts = <2 0>;
+	};
+
+	pmc0: power-management@10000000 {
+		compatible = "syscon";
+		reg = <0x00000000 0x20000000 0x00000000 0x00010000>;
+
+		reboot {
+			compatible = "syscon-reboot";
+			regmap = <&pmc0>;
+			offset = <0x0>;
+			value = <0xF7>;
+		};
+
+		poweroff {
+			compatible = "syscon-poweroff";
+			regmap = <&pmc0>;
+			offset = <0x0>;
+			value = <0xB2>;
+		};
+	};
+};
