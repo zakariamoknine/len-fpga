@@ -1,6 +1,3 @@
 [submodule "submodules/opensbi"]
 	path = submodules/opensbi
 	url = https://github.com/riscv-software-src/opensbi
-[submodule "submodules/VexiiRiscv"]
-	path = submodules/VexiiRiscv
-	url = https://github.com/SpinalHDL/VexiiRiscv
