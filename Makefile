@@ -55,7 +55,7 @@ serial_boot:
 		$(SBI_PAYLOAD_DIR)/fw_payload.bin \
 		$(RAMFS_BUILD_DIR)/ramfs.img \
 		-p /dev/ttyUSB1 \
-	    -b 460800
+		-b 460800
 
 PHONY += bram
 bram:
@@ -70,7 +70,7 @@ PHONY += fpga
 fpga:
 	@$(VIVADO) -nolog -nojournal \
 		-mode batch \
-	    -source scripts/program_fpga.tcl \
+		-source scripts/program_fpga.tcl \
 		-tclargs $(FPGA_DEVICE)
 
 PHONY += connect
